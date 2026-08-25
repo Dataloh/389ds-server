@@ -53,7 +53,7 @@
              ( dirsrv_tls_enforced_initially_binds or
                dirsrv_tls_enforced_initially_ssf | int > 0 ) }}
         dirsrv_server_uri: >-
-          {{ dirsrv_ldapi_uri if dirsrv_ldapilisten_enabled
+          {{ dirsrv_ldapi_uri if dirsrv_ldapilisten_enabled and dirsrv_ldapi_enabled | bool
                               else dirsrv_server_uri }}
 
 - name: Configure listen address
