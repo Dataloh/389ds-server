@@ -44,7 +44,7 @@
         dirsrv_ldapi_uri: >-
           {{ "ldapi://" ~
              ( ( dirsrv_rundir | default("/var/run") ) ~
-               "/slapd-" ~ dirsrv_serverid ~ ".socket" ) | quote_plus }}
+               "/slapd-" ~ dirsrv_serverid ~ ".socket" ) | urlencode | regex_replace("/", "%2F") }}
 
     - name: Prepare LDAP auth data
       ansible.builtin.set_fact:
