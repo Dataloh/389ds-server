@@ -2,7 +2,9 @@
 ansible
 ansible-core; python_version >= '3.11'
 ansible-lint
-docker==5.0.0
+# Docker SDK 5 is incompatible with Requests 2.32+, which current GitHub-hosted
+# runners install. Molecule uses this SDK for its Docker driver sanity check.
+docker==7.1.0
 # Molecule 26 rejects the legacy scenario configuration before the tests run.
 # Keep the test runner on the version currently compatible with these scenarios.
 molecule==25.9.0
