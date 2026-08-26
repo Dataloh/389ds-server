@@ -5,12 +5,12 @@
   vars:
     dirsrv_suffix: "dc=test,dc=local"
     dirsrv_serverid: default
-    
+
     dirsrv_rootdn: cn=Directory Manager
     dirsrv_rootdn_password: "P455W0RD"
     dirsrv_listen_host: 0.0.0.0
 
-    dirsrv_tls_enabled: false 
+    dirsrv_tls_enabled: false
 
     # BACKWARDS COMPATIBILITY TEST
     # Should guarantee nteroperability between 389DS 1.3.X and 1.4.X
