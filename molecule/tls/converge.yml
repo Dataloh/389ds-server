@@ -3,8 +3,15 @@
   hosts: all
 
   vars:
+    dirsrv_suffix: "dc=test,dc=local"
+
+    dirsrv_rootdn: "cn=Directory Manager"
     dirsrv_rootdn_password: "P455W0RD"
     dirsrv_listen_host: 0.0.0.0
+
+    # Ansible is not secure enough for a SSF of 256 for 389DS 1.4.X
+    # Unfortunately we don't yet have access to dirsrv_legacy or the installed version so we need to base the condition on the CentOS version
+    dirsrv_tls_minssf: "128"
 
     dirsrv_tls_enabled: true
     dirsrv_tls_enforced: true
@@ -15,35 +22,12 @@
     dirsrv_tls_key_file: tls_test_local.key
 
     dirsrv_create_suffix_entry: True
-  pre_tasks:
-    - name: Create dirsrv service dropin directory
-      ansible.builtin.file:
-        path: /etc/systemd/system/dirsrv@.service.d/
-        owner: root
-        group: root
-        mode: '0755'
-        state: directory
-
-    - name: Copy dirsrv service dropin config
-      become: true
-      ansible.builtin.copy:
-        src: dirsrv-dropin.conf
-        dest: /etc/systemd/system/dirsrv@.service.d/custom.conf
-        owner: root
-        group: root
-        mode: '0644'
-        force: true
-
-    # Ansible is not secure enough for a SSF of 256 for 389DS 1.4.X
-    # Unfortunately we don't yet have access to dirsrv_legacy or the installed version so we need to base the condition on the CentOS version
-    - name: Set minimum SSF
-      ansible.builtin.set_fact:
-        dirsrv_tls_minssf: "{%if ansible_facts['distribution_major_version'] | int == 8 %}128{% else %}256{% endif %}"
-
-  roles:
-    - role: lvps.389ds_server
 
   tasks:
+    - name: Apply local lvps.389ds_server role
+      ansible.builtin.include_role:
+        name: "{{ playbook_dir }}/../.."
+
     - name: Ensure we can access the server, for testing
       community.general.ldap_entry:
         server_uri: "ldap://localhost"
@@ -72,4 +56,4 @@
         - name: Assert that task failed successfully
           ansible.builtin.assert:
             that:
-              - "{{ dirsrv_tls_test.details }}.info == 'Minimum SSF not met.'"
+              - "'Minimum SSF not met.' in dirsrv_tls_test.details"

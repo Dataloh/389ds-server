@@ -29,29 +29,11 @@
     dirsrv_selfsigned_cert: False
     dirsrv_create_suffix_entry: True
 
-  pre_tasks:
-    - name: Create dirsrv service dropin directory
-      ansible.builtin.file:
-        path: /etc/systemd/system/dirsrv@.service.d/
-        owner: root
-        group: root
-        mode: '0755'
-        state: directory
-
-    - name: Copy dirsrv service dropin config
-      become: true
-      ansible.builtin.copy:
-        src: dirsrv-dropin.conf
-        dest: /etc/systemd/system/dirsrv@.service.d/custom.conf
-        owner: root
-        group: root
-        mode: '0644'
-        force: true
-
-  roles:
-    - role: lvps.389ds_server
-
   tasks:
+    - name: Apply local lvps.389ds_server role
+      ansible.builtin.include_role:
+        name: "{{ playbook_dir }}/../.."
+
     - name: Ensure container entries exist, for testing
       community.general.ldap_entry:
         server_uri: "ldap://localhost"

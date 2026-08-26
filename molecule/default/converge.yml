@@ -7,29 +7,11 @@
     dirsrv_rootdn_password: "P455W0RD"
     dirsrv_listen_host: 0.0.0.0
 
-  pre_tasks:
-    - name: Create dirsrv service dropin directory
-      ansible.builtin.file:
-        path: /etc/systemd/system/dirsrv@.service.d/
-        owner: root
-        group: root
-        mode: '0755'
-        state: directory
-
-    - name: Copy dirsrv service dropin config
-      become: true
-      ansible.builtin.copy:
-        src: dirsrv-dropin.conf
-        dest: /etc/systemd/system/dirsrv@.service.d/custom.conf
-        owner: root
-        group: root
-        mode: '0644'
-        force: true
-
-  roles:
-    - role: lvps.389ds_server
-
   tasks:
+    - name: Apply local lvps.389ds_server role
+      ansible.builtin.include_role:
+        name: "{{ playbook_dir }}/../.."
+
     - name: Ensure we can access the server, for testing
       community.general.ldap_entry:
         server_uri: "ldap://localhost"
