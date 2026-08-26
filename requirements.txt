@@ -3,8 +3,10 @@ ansible
 ansible-core; python_version >= '3.11'
 ansible-lint
 docker==5.0.0
-molecule>=3.3.3
-molecule-plugins[docker]
+# Molecule 26 rejects the legacy scenario configuration before the tests run.
+# Keep the test runner on the version currently compatible with these scenarios.
+molecule==25.9.0
+molecule-plugins[docker]==25.8.12
 six>=1.16.0
 setuptools>=67.8.0  # For distutils
 yamllint
