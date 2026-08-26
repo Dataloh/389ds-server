@@ -15,6 +15,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Molecule's Docker driver needs a running daemon. Do not rely on the
+      # implementation detail that GitHub-hosted Linux runners normally start one.
+      - name: Set up Docker
+        uses: docker/setup-docker-action@v5
+        with:
+          set-host: true
+
+      - name: Verify Docker daemon
+        run: docker info
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
