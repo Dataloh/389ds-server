@@ -8,8 +8,8 @@ platforms:
   # Images that contain the string "SYSCTL" will be trated with the "docker systemctl replacement" script
   - name: CentOS8-Backwards-SYSCTL
     image: centos:8
-    python_package: python2
-    python_devel_package: python2-devel
+    python_package: python3
+    python_devel_package: python3-devel
     install_epel: true
     command: /sbin/init
     capabilities:
@@ -21,8 +21,7 @@ provisioner:
   inventory:
     host_vars:
       CentOS8-Backwards-SYSCTL:
-        # This legacy scenario installs Python 2.7 and therefore requires the
-        # Python-2-compatible Ansible Core 2.11 dependency used by this suite.
-        ansible_python_interpreter: /usr/bin/python2
+        # Use the Python 3 interpreter installed for this CentOS 8 platform.
+        ansible_python_interpreter: /usr/bin/python3
 verifier:
   name: testinfra
