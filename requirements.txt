@@ -10,6 +10,9 @@ docker==7.1.0
 # Molecule 25 supports the current scenario configuration and requires Core 2.15+.
 molecule==25.9.0
 molecule-plugins[docker]==25.8.12
+# The testinfra verifier invokes pytest during `molecule test`.
+pytest
+testinfra
 six>=1.16.0
 setuptools>=67.8.0  # For distutils
 yamllint
