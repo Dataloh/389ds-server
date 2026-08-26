@@ -115,16 +115,6 @@
         - not dirsrv_instance_dir_exists
         - not dirsrv_legacy
 
-    - name: Debug the error
-      shell: 'journalctl -eu dirsrv@default.service'
-      register: systemctl_error_output
-      tags: skip_ansible_lint
-
-    - name: Print the error
-      ansible.builtin.debug:
-        var: systemctl_error_output
-      tags: skip_ansible_lint
-
     - name: Copy additional ldif files (dsconf)
       ansible.builtin.copy:
         src: "{{ item }}"
