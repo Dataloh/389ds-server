@@ -120,8 +120,9 @@
       register: systemctl_error_output
       tags: skip_ansible_lint
 
-    - debug:
-      msg: "{{ systemctl_error_output }}"
+    - name: Print the error
+      ansible.builtin.debug:
+        var: systemctl_error_output
       tags: skip_ansible_lint
 
     - name: Copy additional ldif files (dsconf)
