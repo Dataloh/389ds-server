@@ -13,19 +13,10 @@
 
     dirsrv_tls_enabled: false
 
-    dirsrv_password_storage_scheme: "PBKDF2_SHA256"
     dirsrv_install_examples: true
     dirsrv_ldapi_enabled: true
+    dirsrv_ldapilisten_enabled: true
 
-    dirsrv_plugins_enabled:
-      MemberOf Plugin: true
-      Distributed Numeric Assignment Plugin: true
-
-    dirsrv_custom_schema:
-      - "98telegram.ldif"
-
-    # Interoperability between 389DS 1.3.X and 1.4.X
-    dirsrv_defaults_version: "001004002"
     dirsrv_selfsigned_cert: False
     dirsrv_create_suffix_entry: True
 
@@ -34,13 +25,15 @@
       ansible.builtin.include_role:
         name: "{{ playbook_dir }}/../.."
 
-    - name: Ensure container entries exist, for testing
+    - name: Ensure we can access the server, for testing
       community.general.ldap_entry:
-        server_uri: "ldap://localhost"
-        bind_dn: "cn=Directory Manager"
-        bind_pw: "secret"
-        dn: "{{ item.dn }}"
-        objectClass: "{{ item.objectClass }}"
+        server_uri: "{{ dirsrv_ldapi_uri }}"
+        bind_dn: "{{ dirsrv_rootdn }}"
+        bind_pw: "{{ dirsrv_rootdn_password }}"
+        dn: "cn=config"
+        objectClass: "top"
+        start_tls: "{{ dirsrv_tls_enabled }}"
+        validate_certs: "{{ dirsrv_tls_certificate_trusted | default(false) }}"
         state: present
       loop:
         - { dn: "ou=Groups,dc=example,dc=local", objectClass: ["organizationalunit", "top"] }
