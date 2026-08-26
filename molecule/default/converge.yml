@@ -3,6 +3,11 @@
   hosts: all
 
   vars:
+    dirsrv_serverid: default
+    dirsrv_rootdn: cn=Directory Manager
+    dirsrv_tls_enabled: false
+    dirsrv_selfsigned_cert: true
+
     # Minimum default configuration
     dirsrv_rootdn_password: "P455W0RD"
     dirsrv_listen_host: 0.0.0.0
@@ -20,16 +25,23 @@
         dn: "cn=config"
         objectClass: "top"
         start_tls: "{{ dirsrv_tls_enabled }}"
-        validate_certs: "{{ dirsrv_tls_certificate_trusted }}"
+        validate_certs: "{{ dirsrv_tls_certificate_trusted | default(false) }}"
         state: present
 
     - name: Ensure self-signed certificate has been created
       ansible.builtin.shell:
-        cmd: >
-          set -o pipefail && \
-            grep -rhsc 'CN=ssca.389ds.example.com,O=testing' /etc/dirsrv/slapd-{{ dirsrv_serverid }}/ | sort -r | uniq | head -n 1
+        cmd: |
+          set -euo pipefail
+          certutil -L \
+            -d /etc/dirsrv/slapd-{{ dirsrv_serverid }}/ \
+            -n Self-Signed-CA \
+            -f /etc/dirsrv/slapd-{{ dirsrv_serverid }}/pwdfile.txt >/dev/null
+          certutil -L \
+            -d /etc/dirsrv/slapd-{{ dirsrv_serverid }}/ \
+            -n Server-Cert \
+            -f /etc/dirsrv/slapd-{{ dirsrv_serverid }}/pwdfile.txt >/dev/null
         executable: /bin/bash
       register: dirsrv_selfsigned_cert_test
-      failed_when: "dirsrv_selfsigned_cert_test.stdout | int == 0"
+      failed_when: dirsrv_selfsigned_cert_test.rc != 0
       changed_when: false
-      when: not dirsrv_legacy
+      when: dirsrv_selfsigned_cert | default(false) | bool

@@ -36,7 +36,7 @@
         dn: "cn=config"
         objectClass: "top"
         start_tls: "{{ dirsrv_tls_enabled }}"
-        validate_certs: "{{ dirsrv_tls_certificate_trusted }}"
+        validate_certs: "{{ dirsrv_tls_certificate_trusted | default(false) }}"
         state: present
 
     - name: Test TLS enforcement
