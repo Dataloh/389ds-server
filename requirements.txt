@@ -1,6 +1,8 @@
 -i https://pypi.org/simple
-ansible
-ansible-core; python_version >= '3.11'
+# Molecule Docker 25.8.12 reads the `invocation` metadata in task results.
+# ansible-core 2.19+ no longer supplies that data, so retain the compatible
+# Ansible 10 / ansible-core 2.16 release family until Molecule is upgraded.
+ansible==10.7.0
 ansible-lint
 # Docker SDK 5 is incompatible with Requests 2.32+, which current GitHub-hosted
 # runners install. Molecule uses this SDK for its Docker driver sanity check.
