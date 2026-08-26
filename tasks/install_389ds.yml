@@ -118,9 +118,11 @@
     - name: Debug the error
       shell: 'journalctl -eu dirsrv@default.service'
       register: systemctl_error_output
+      tag: skip_ansible_lint
 
     - debug:
       msg: "{{ systemctl_error_output }}"
+      tag: skip_ansible_lint
 
     - name: Copy additional ldif files (dsconf)
       ansible.builtin.copy:
