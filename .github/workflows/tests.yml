@@ -28,9 +28,9 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          # Avoid the moving `3.x` alias and retain compatibility with
-          # Ansible 10 / ansible-core 2.16 used by the Molecule Docker plugin.
-          python-version: '3.12'
+          # Avoid the moving `3.x` alias. Ansible 4 / ansible-core 2.11
+          # supports Python 3.9–3.10 on the controller.
+          python-version: '3.10'
 
       - name: Install dependencies
         run: |

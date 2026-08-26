@@ -21,8 +21,8 @@ provisioner:
   inventory:
     host_vars:
       CentOS8-Backwards-SYSCTL:
-        # This legacy scenario installs Python 2.7. Ansible Core 2.16 supports
-        # it, whereas the CentOS 8 platform Python 3.6 cannot run its modules.
+        # This legacy scenario installs Python 2.7 and therefore requires the
+        # Python-2-compatible Ansible Core 2.11 dependency used by this suite.
         ansible_python_interpreter: /usr/bin/python2
 verifier:
   name: testinfra
