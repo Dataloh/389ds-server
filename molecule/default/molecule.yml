@@ -5,7 +5,7 @@ driver:
   name: docker
 role_name_check: 1
 platforms:
-  # Images that contain the string "SYSCTL" will be trated with the "docker systemctl replacement" script
+  # Images that contain the string "SYSCTL" run systemd as PID 1.
   - name: CentOS8-Default
     image: centos:8
     python_package: python3
@@ -13,8 +13,7 @@ platforms:
     install_epel: true
     command: /sbin/init
     user: root
-    capabilities:
-      - SYS_ADMIN
+    capabilities: []
     security_opts:
       - no-new-privileges
     cgroupns_mode: host
