@@ -28,5 +28,10 @@ platforms:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
 provisioner:
   name: ansible
+  inventory:
+    host_vars:
+      CentOS8-Other-SYSCTL:
+        # Use the interpreter installed for this legacy CentOS 8 platform.
+        ansible_python_interpreter: /usr/bin/python2
 verifier:
   name: testinfra
