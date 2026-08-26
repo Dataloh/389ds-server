@@ -5,7 +5,6 @@ driver:
   name: docker
 role_name_check: 1
 platforms:
-  # Images that contain the string "SYSCTL" run systemd as PID 1.
   - name: CentOS8-Backwards
     image: centos:8
     python_package: python3
